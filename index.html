@@ -1,247 +1,1725 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TourLV.com - Tour Fast. Tour Free.</title>
-    <style>
-        /* --- Reset & Layout Base --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        html, body {
-            height: 100%;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #fff;
-            overflow-x: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090611">
 
-        /* --- Dynamic Animated Background (Vegas Sunset) --- */
-        body {
-            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-        }
+<title>TourLV.com | Tour Las Vegas Fast. Tour Free.</title>
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+<meta name="description" content="TourLV.com is your free Las Vegas visitor guide for attractions, shows, hotels, restaurants, nightlife, free things to do, tours, sports, transportation, maps and trip planning.">
 
-        /* --- Main Container --- */
-        .main-wrapper {
-            position: relative;
-            z-index: 10; /* Ensures content stays above skyline */
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            padding: 20px;
-        }
+<meta name="keywords" content="Las Vegas, Las Vegas tours, Las Vegas attractions, Las Vegas Strip, Vegas shows, Vegas hotels, Vegas restaurants, free Las Vegas attractions, Fremont Street, Grand Canyon tours, Hoover Dam, Red Rock Canyon, Las Vegas nightlife">
 
-        /* --- Header (Text) --- */
-        header {
-            text-align: center;
-            padding: 60px 0 40px 0;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
-        }
+<meta name="robots" content="index,follow">
 
-        h1 { font-size: 4em; letter-spacing: 2px; text-transform: uppercase; background: linear-gradient(to right, #fff, #ffd700, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px;}
-        .tagline { font-size: 1.5em; font-weight: 300; color: #e0e0e0; }
+<meta property="og:title" content="TourLV.com | Tour Fast. Tour Free.">
+<meta property="og:description" content="Explore Las Vegas attractions, shows, hotels, dining, nightlife, tours, sports, free attractions and more.">
+<meta property="og:type" content="website">
 
-        /* --- Dynamic Category Grid --- */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto 50px auto;
-            width: 100%;
-        }
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
-        .card {
-            background: rgba(255, 255, 255, 0.1); /* Semi-transparent glass effect */
-            backdrop-filter: blur(10px); /* Blurs background behind card */
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+<style>
+:root{
+  --black:#07050c;
+  --black2:#100b18;
+  --purple:#3b1264;
+  --purple2:#6415a5;
+  --pink:#ff1f75;
+  --red:#f02748;
+  --gold:#ffd15c;
+  --gold2:#f6b82e;
+  --blue:#38a7ff;
+  --white:#ffffff;
+  --soft:#f7f4fb;
+  --text:#17121f;
+  --muted:#6d6477;
+  --line:#e6deec;
+  --shadow:0 18px 50px rgba(24,10,38,.16);
+  --radius:20px;
+}
 
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            border-color: rgba(255, 215, 0, 0.5); /* Gold border on hover */
-        }
+*{
+  box-sizing:border-box;
+}
 
-        .card h3 { font-size: 1.8em; margin-bottom: 15px; color: #fff; }
-        .card p { font-size: 1em; color: #d0d0d0; margin-bottom: 20px; flex-grow: 1;}
+html{
+  scroll-behavior:smooth;
+}
 
-        .card a {
-            display: inline-block;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #ff416c, #ff4b2b); /* Vibrant Vegas Red */
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 30px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: background 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .card a:hover {
-            background: linear-gradient(135deg, #ff4b2b, #ff416c);
-            box-shadow: 0 0 20px rgba(255, 75, 43, 0.7);
-        }
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--text);
+  background:#f7f5fa;
+  line-height:1.5;
+}
 
-        /* --- Footer --- */
-        footer {
-            margin-top: auto;
-            text-align: center;
-            padding: 30px;
-            font-size: 0.9em;
-            color: #aaa;
-            background: rgba(0,0,0,0.3);
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
+a{
+  color:inherit;
+}
 
-        footer a { color: #aaa; text-decoration: none; margin: 0 10px; transition: color 0.3s;}
-        footer a:hover { color: #ffd700; }
+button,
+input,
+select{
+  font:inherit;
+}
 
-        /* --- The Generic Skyline Graphic (using SVG) --- */
-        /* This creates a silhouette of generic towers at the bottom */
-        .skyline-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 250px; /* Height of the skyline */
-            z-index: 1; /* Below content */
-        }
+button{
+  cursor:pointer;
+}
 
-        .skyline-svg {
-            width: 100%;
-            height: 100%;
-            fill: #0a0a2a; /* Dark color for silhouette */
-        }
+img{
+  max-width:100%;
+}
 
-        /* Twinkling Lights Animation within the SVG */
-        .window-light {
-            animation: twinkle 2s infinite alternate;
-            opacity: 0.6;
-        }
+/* HEADER */
 
-        /* Randomize animation delays for a realistic twinkle effect */
-        .window-light:nth-child(odd) { animation-delay: 0s; }
-        .window-light:nth-child(even) { animation-delay: 1s; }
-        .window-light:nth-child(3n) { animation-delay: 0.5s; }
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:2000;
+  background:rgba(7,5,12,.96);
+  border-bottom:1px solid rgba(255,255,255,.12);
+  backdrop-filter:blur(12px);
+}
 
-        @keyframes twinkle {
-            0% { opacity: 0.3; }
-            100% { opacity: 1; }
-        }
+.nav{
+  max-width:1280px;
+  margin:auto;
+  min-height:68px;
+  padding:10px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
 
-        /* --- Mobile Responsiveness --- */
-        @media (max-width: 768px) {
-            h1 { font-size: 2.5em; }
-            .tagline { font-size: 1.2em; }
-            header { padding: 40px 0 20px 0; }
-            .grid { gap: 20px; }
-            .card { padding: 20px; }
-        }
-    </style>
+.logo{
+  text-decoration:none;
+  color:white;
+  font-weight:900;
+  font-size:29px;
+  letter-spacing:-1px;
+}
+
+.logo .tour{
+  color:white;
+}
+
+.logo .lv{
+  color:var(--gold);
+}
+
+.logo .com{
+  color:#ff4d91;
+}
+
+.navlinks{
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+
+.navlinks a{
+  text-decoration:none;
+  color:#ddd4e5;
+  font-size:14px;
+  font-weight:700;
+}
+
+.navlinks a:hover{
+  color:var(--gold);
+}
+
+/* HERO */
+
+.hero{
+  min-height:760px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  color:white;
+  overflow:hidden;
+  background:
+    linear-gradient(90deg,rgba(5,3,10,.92) 0%,rgba(5,3,10,.65) 48%,rgba(5,3,10,.32) 100%),
+    linear-gradient(0deg,rgba(7,5,12,.8),rgba(7,5,12,.05)),
+    url("https://commons.wikimedia.org/wiki/Special:Redirect/file/Bellagio%20fountains%20night.jpg") center/cover no-repeat;
+}
+
+.hero:after{
+  content:"";
+  position:absolute;
+  inset:auto 0 0;
+  height:160px;
+  background:linear-gradient(transparent,#07050c);
+}
+
+.hero-content{
+  position:relative;
+  z-index:3;
+  width:100%;
+  max-width:1280px;
+  margin:auto;
+  padding:90px 20px 130px;
+}
+
+.vegas-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid rgba(255,209,92,.55);
+  color:var(--gold);
+  background:rgba(0,0,0,.42);
+  padding:8px 13px;
+  border-radius:999px;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  font-size:12px;
+  font-weight:900;
+}
+
+.hero h1{
+  max-width:850px;
+  margin:18px 0 8px;
+  font-size:clamp(56px,9vw,112px);
+  line-height:.88;
+  letter-spacing:-5px;
+  text-shadow:0 8px 30px rgba(0,0,0,.55);
+}
+
+.hero h1 span{
+  color:var(--gold);
+}
+
+.tagline{
+  font-size:clamp(24px,3vw,38px);
+  font-weight:800;
+  color:#fff;
+  margin:10px 0;
+}
+
+.hero-copy{
+  max-width:720px;
+  color:#eee7f3;
+  font-size:18px;
+  margin:14px 0 0;
+}
+
+.hero-actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:28px;
+}
+
+.btn{
+  border:0;
+  border-radius:12px;
+  padding:14px 19px;
+  font-weight:900;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  transition:.2s;
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+}
+
+.btn-gold{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#211306;
+  box-shadow:0 8px 24px rgba(255,193,62,.25);
+}
+
+.btn-pink{
+  background:linear-gradient(135deg,#ff236f,#d70f62);
+  color:white;
+}
+
+.btn-white{
+  background:white;
+  color:#181020;
+}
+
+/* QUICK NAV */
+
+.quick-wrap{
+  background:#07050c;
+  padding:0 20px 32px;
+}
+
+.quick-grid{
+  max-width:1280px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:10px;
+}
+
+.quick{
+  text-decoration:none;
+  text-align:center;
+  color:white;
+  background:#15101d;
+  border:1px solid #30253d;
+  border-radius:14px;
+  padding:15px 8px;
+  font-size:13px;
+  font-weight:800;
+  transition:.2s;
+}
+
+.quick span{
+  display:block;
+  font-size:23px;
+  margin-bottom:4px;
+}
+
+.quick:hover{
+  background:#241631;
+  border-color:#8d4db9;
+  transform:translateY(-2px);
+}
+
+/* GENERAL */
+
+.container{
+  max-width:1280px;
+  margin:auto;
+  padding:0 20px;
+}
+
+.section{
+  padding:58px 0;
+}
+
+.section-title{
+  margin-bottom:22px;
+}
+
+.section-title .kicker{
+  color:#a11e65;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  font-weight:900;
+  font-size:12px;
+}
+
+.section-title h2{
+  margin:5px 0 5px;
+  font-size:clamp(30px,4vw,45px);
+  letter-spacing:-1.5px;
+}
+
+.section-title p{
+  margin:0;
+  color:var(--muted);
+  max-width:760px;
+}
+
+/* LIVE STRIP */
+
+.live-strip{
+  background:linear-gradient(135deg,#1b0b29,#08050d);
+  color:white;
+}
+
+.live-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+
+.live-card{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:16px;
+  padding:18px;
+}
+
+.live-card small{
+  display:block;
+  color:#bdb0c8;
+  font-weight:700;
+  margin-bottom:5px;
+}
+
+.live-card strong{
+  font-size:19px;
+  color:white;
+}
+
+.live-card a{
+  color:var(--gold);
+  text-decoration:none;
+}
+
+/* CATEGORY CARDS */
+
+.category-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+}
+
+.category{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 8px 25px rgba(30,13,45,.06);
+  transition:.2s;
+}
+
+.category:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow);
+  border-color:#d1b2e4;
+}
+
+.cat-icon{
+  width:48px;
+  height:48px;
+  display:grid;
+  place-items:center;
+  border-radius:14px;
+  background:linear-gradient(135deg,#4b146e,#a11670);
+  font-size:24px;
+  margin-bottom:13px;
+}
+
+.category h3{
+  margin:0 0 6px;
+  font-size:18px;
+}
+
+.category p{
+  color:var(--muted);
+  font-size:13px;
+  min-height:58px;
+  margin:0 0 14px;
+}
+
+.category a{
+  text-decoration:none;
+  color:#8a1761;
+  font-weight:900;
+  font-size:13px;
+}
+
+/* PHOTO EXPERIENCE */
+
+.photo-feature{
+  min-height:520px;
+  display:flex;
+  align-items:flex-end;
+  color:white;
+  position:relative;
+  background-position:center;
+  background-size:cover;
+  overflow:hidden;
+}
+
+.photo-feature:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(0deg,rgba(4,2,8,.94),rgba(4,2,8,.08) 70%);
+}
+
+.photo-inner{
+  position:relative;
+  z-index:2;
+  max-width:1280px;
+  width:100%;
+  margin:auto;
+  padding:65px 20px;
+}
+
+.photo-inner h2{
+  font-size:clamp(38px,6vw,72px);
+  line-height:.95;
+  letter-spacing:-2px;
+  margin:8px 0 10px;
+  max-width:850px;
+}
+
+.photo-inner p{
+  max-width:700px;
+  color:#eee5f3;
+  font-size:17px;
+}
+
+.welcome-photo{
+  background-image:url("https://commons.wikimedia.org/wiki/Special:Redirect/file/Welcome%20to%20Fabulous%20Las%20Vegas%20sign.jpg");
+}
+
+.fremont-photo{
+  background-image:url("https://commons.wikimedia.org/wiki/Special:Redirect/file/Fremont%20Street%20Experience.jpg");
+}
+
+/* FEATURED */
+
+.feature-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+
+.feature{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 8px 25px rgba(30,13,45,.07);
+}
+
+.feature-body{
+  padding:20px;
+}
+
+.feature-icon{
+  font-size:35px;
+}
+
+.feature h3{
+  margin:8px 0 5px;
+}
+
+.feature p{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.feature a{
+  display:inline-block;
+  margin-top:8px;
+  color:#8c155e;
+  text-decoration:none;
+  font-weight:900;
+}
+
+/* MAP */
+
+.map-section{
+  background:#0b0710;
+  color:white;
+}
+
+.map-section .section-title p{
+  color:#bcb1c4;
+}
+
+.map-layout{
+  display:grid;
+  grid-template-columns:1.4fr .6fr;
+  gap:18px;
+}
+
+.map-panel{
+  background:#17101f;
+  border:1px solid #30243b;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+#map{
+  width:100%;
+  height:580px;
+  background:#ddd;
+}
+
+.map-side{
+  padding:18px;
+}
+
+.map-side h3{
+  margin-top:0;
+}
+
+.map-side p{
+  color:#bcb1c4;
+  font-size:13px;
+}
+
+.location-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.location-button{
+  width:100%;
+  text-align:left;
+  background:#24182e;
+  color:white;
+  border:1px solid #3d2b4a;
+  padding:11px 12px;
+  border-radius:10px;
+  font-weight:700;
+}
+
+.location-button:hover{
+  background:#342042;
+}
+
+.near-btn{
+  width:100%;
+  border:0;
+  background:var(--gold);
+  color:#1c1005;
+  padding:13px;
+  border-radius:11px;
+  font-weight:900;
+  margin-bottom:12px;
+}
+
+.map-status{
+  margin-top:12px;
+  color:#d0c4d7;
+  font-size:12px;
+}
+
+/* PLANNER */
+
+.planner{
+  background:linear-gradient(135deg,#35104e,#8e1768);
+  color:white;
+}
+
+.planner-box{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.17);
+  border-radius:20px;
+  padding:24px;
+}
+
+.planner-options{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin:18px 0;
+}
+
+.plan-choice{
+  background:rgba(0,0,0,.2);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:12px;
+  padding:12px;
+}
+
+.plan-choice label{
+  cursor:pointer;
+  font-weight:700;
+  margin-left:5px;
+}
+
+.plan-output{
+  display:none;
+  background:white;
+  color:#211828;
+  border-radius:14px;
+  padding:18px;
+  margin-top:16px;
+}
+
+.plan-output h3{
+  margin-top:0;
+}
+
+.plan-output ul{
+  padding-left:20px;
+}
+
+/* TRAVEL ESSENTIALS */
+
+.essential-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+
+.essential{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:20px;
+}
+
+.essential h3{
+  margin-top:0;
+}
+
+.essential p{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.essential-links{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.small-link{
+  text-decoration:none;
+  background:#f1eaf6;
+  color:#6b174e;
+  padding:8px 10px;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:800;
+}
+
+/* DISCLAIMER */
+
+.notice{
+  background:#fff8e8;
+  border:1px solid #f2d893;
+  border-left:5px solid #e4a81b;
+  border-radius:12px;
+  padding:16px;
+  color:#66501c;
+  font-size:13px;
+}
+
+/* FOOTER */
+
+footer{
+  background:#060409;
+  color:#9f93a7;
+  padding:38px 20px;
+}
+
+.footer-inner{
+  max-width:1280px;
+  margin:auto;
+}
+
+.footer-logo{
+  color:white;
+  font-size:28px;
+  font-weight:900;
+}
+
+.footer-logo span{
+  color:var(--gold);
+}
+
+footer p{
+  max-width:1000px;
+  font-size:12px;
+}
+
+.photo-credit{
+  color:#786d80;
+  font-size:11px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1050px){
+  .quick-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .category-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .feature-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .map-layout{
+    grid-template-columns:1fr;
+  }
+
+  .planner-options{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .live-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:700px){
+  .navlinks{
+    display:none;
+  }
+
+  .hero{
+    min-height:690px;
+  }
+
+  .hero h1{
+    letter-spacing:-3px;
+  }
+
+  .quick-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .category-grid,
+  .feature-grid,
+  .essential-grid,
+  .live-grid,
+  .planner-options{
+    grid-template-columns:1fr;
+  }
+
+  .photo-feature{
+    min-height:470px;
+  }
+
+  #map{
+    height:440px;
+  }
+}
+</style>
 </head>
+
 <body>
 
-    <!-- The Main Content Wrapper -->
-    <div class="main-wrapper">
-        <header>
-            <h1>TourLV.com</h1>
-            <p class="tagline">Tour Fast. Tour Free.</p>
-        </header>
+<header class="topbar">
+  <div class="nav">
+    <a class="logo" href="#">
+      <span class="tour">Tour</span><span class="lv">LV</span><span class="com">.com</span>
+    </a>
 
-        <main>
-            <div class="grid">
-                <!-- Category Cards -->
-                <div class="card">
-                    <h3>Grand Canyon</h3>
-                    <p>Breathtaking natural wonder, just a short trip from the neon lights.</p>
-                    <a href="https://www.papillon.com" target="_blank">Book Now</a>
-                </div>
-                <div class="card">
-                    <h3>Nightlife</h3>
-                    <p>Access VIP entry and exclusive deals at the world's top clubs and lounges.</p>
-                    <a href="https://www.lasvegasnightclubs.com" target="_blank">Explore</a>
-                </div>
-                <div class="card">
-                    <h3>Fine Dining</h3>
-                    <p>Discover culinary masterpieces from celebrity chefs and iconic restaurants.</p>
-                    <a href="https://www.opentable.com" target="_blank">Reserve</a>
-                </div>
-                <div class="card">
-                    <h3>Show Tickets</h3>
-                    <p>From resident headliners to acrobatic spectacles, get the best seats in the house.</p>
-                    <a href="https://www.ticketmaster.com" target="_blank">Find Tickets</a>
-                </div>
-                <div class="card">
-                    <h3>Pool Parties</h3>
-                    <p>Experience the ultimate daytime entertainment at Vegas's premier beach clubs.</p>
-                    <a href="https://www.lasvegasnightclubs.com/dayclubs/" target="_blank">Get Wet</a>
-                </div>
-                <div class="card">
-                    <h3>Helicopter Tours</h3>
-                    <p>See the Strip from above with an unforgettable aerial adventure.</p>
-                    <a href="https://www.papillon.com" target="_blank">Fly High</a>
-                </div>
-            </div>
-        </main>
+    <nav class="navlinks">
+      <a href="#explore">Explore</a>
+      <a href="#free">Free Vegas</a>
+      <a href="#map-section">Vegas Map</a>
+      <a href="#planner">Trip Planner</a>
+      <a href="#essentials">Visitor Info</a>
+    </nav>
+  </div>
+</header>
 
-        <footer>
-            <p><a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
-            <p>&copy; 2026 TourLV.com - Independent Information Service</p>
-        </footer>
+<section class="hero">
+  <div class="hero-content">
+
+    <div class="vegas-badge">
+      ♦ Your Las Vegas Visitor Guide ♦
     </div>
 
-    <!-- The Skyline Graphic Layer -->
-    <div class="skyline-container">
-        <svg class="skyline-svg" viewBox="0 0 1200 300" preserveAspectRatio="none">
-            <!-- Generic Building Silhouettes -->
-            <rect x="0" y="50" width="80" height="250" opacity="0.8"/>
-            <rect x="90" y="20" width="100" height="280" opacity="1"/>
-            <rect x="200" y="80" width="70" height="220" opacity="0.9"/>
-            <rect x="290" y="0" width="120" height="300" opacity="0.7"/>
-            <rect x="420" y="60" width="90" height="240" opacity="1"/>
-            <rect x="520" y="30" width="110" height="270" opacity="0.8"/>
-            <rect x="650" y="90" width="80" height="210" opacity="0.9"/>
-            <rect x="740" y="10" width="130" height="290" opacity="1"/>
-            <rect x="890" y="70" width="80" height="230" opacity="0.8"/>
-            <rect x="980" y="40" width="90" height="260" opacity="0.9"/>
-            <rect x="1080" y="100" width="120" height="200" opacity="1"/>
+    <h1>
+      TOUR <span>LAS VEGAS</span>
+    </h1>
 
-            <!-- Twinkling Windows (Small squares) - Randomized -->
-            <rect class="window-light" x="110" y="40" width="4" height="4" fill="#fff"/>
-            <rect class="window-light" x="130" y="60" width="4" height="4" fill="#fff"/>
-            <rect class="window-light" x="330" y="30" width="6" height="6" fill="#fff"/>
-            <rect class="window-light" x="360" y="90" width="4" height="4" fill="#fff"/>
-            <rect class="window-light" x="450" y="100" width="4" height="4" fill="#fff"/>
-            <rect class="window-light" x="560" y="50" width="6" height="6" fill="#fff"/>
-            <rect class="window-light" x="780" y="30" width="4" height="4" fill="#fff"/>
-            <rect class="window-light" x="820" y="80" width="4" height="4" fill="#fff"/>
-            <rect class="window-light" x="1000" y="60" width="6" height="6" fill="#fff"/>
-            <rect class="window-light" x="1020" y="150" width="4" height="4" fill="#fff"/>
-            <rect class="window-light" x="1110" y="130" width="6" height="6" fill="#fff"/>
-            <rect class="window-light" x="1150" y="180" width="4" height="4" fill="#fff"/>
-            <rect class="window-light" x="30" y="120" width="4" height="4" fill="#fff"/>
-            <rect class="window-light" x="220" y="140" width="4" height="4" fill="#fff"/>
-            <rect class="window-light" x="670" y="150" width="4" height="4" fill="#fff"/>
-            <rect class="window-light" x="910" y="160" width="4" height="4" fill="#fff"/>
-        </svg>
+    <div class="tagline">
+      Tour Fast. Tour Free.
     </div>
+
+    <p class="hero-copy">
+      Experience the Strip, Downtown Las Vegas, world-famous attractions, shows, dining, nightlife, sports, tours and unforgettable Nevada adventures—all from one easy place.
+    </p>
+
+    <div class="hero-actions">
+      <a class="btn btn-gold" href="#explore">Explore Las Vegas</a>
+      <a class="btn btn-pink" href="#map-section">Open Vegas Map</a>
+      <a class="btn btn-white" href="#planner">Plan My Trip</a>
+    </div>
+
+  </div>
+</section>
+
+<section class="quick-wrap">
+  <div class="quick-grid">
+
+    <a class="quick" href="#free">
+      <span>★</span>
+      Free Attractions
+    </a>
+
+    <a class="quick" href="#shows">
+      <span>🎭</span>
+      Shows
+    </a>
+
+    <a class="quick" href="#hotels">
+      <span>🏨</span>
+      Hotels
+    </a>
+
+    <a class="quick" href="#dining">
+      <span>🍽️</span>
+      Dining
+    </a>
+
+    <a class="quick" href="#nightlife">
+      <span>🌙</span>
+      Nightlife
+    </a>
+
+    <a class="quick" href="#tours">
+      <span>🚁</span>
+      Tours
+    </a>
+
+  </div>
+</section>
+
+<section class="live-strip">
+  <div class="container section">
+
+    <div class="section-title">
+      <div class="kicker" style="color:#ffd15c;">Vegas Live</div>
+      <h2>Las Vegas right now</h2>
+      <p>Quick links to useful current information for your Vegas visit.</p>
+    </div>
+
+    <div class="live-grid">
+
+      <div class="live-card">
+        <small>LAS VEGAS LOCAL TIME</small>
+        <strong id="vegasTime">Loading...</strong>
+      </div>
+
+      <div class="live-card">
+        <small>CURRENT WEATHER</small>
+        <strong>
+          <a href="https://forecast.weather.gov/MapClick.php?lat=36.17&lon=-115.14" target="_blank" rel="noopener">
+            Check Las Vegas Weather →
+          </a>
+        </strong>
+      </div>
+
+      <div class="live-card">
+        <small>ROAD CONDITIONS</small>
+        <strong>
+          <a href="https://www.nvroads.com/" target="_blank" rel="noopener">
+            Nevada Roads →
+          </a>
+        </strong>
+      </div>
+
+      <div class="live-card">
+        <small>OFFICIAL VISITOR INFORMATION</small>
+        <strong>
+          <a href="https://www.visitlasvegas.com/" target="_blank" rel="noopener">
+            Visit Las Vegas →
+          </a>
+        </strong>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<main>
+
+<section class="section" id="explore">
+  <div class="container">
+
+    <div class="section-title">
+      <div class="kicker">Everything Vegas</div>
+      <h2>What do you want to do?</h2>
+      <p>
+        Start with the experience that interests you and use TourLV.com as your gateway to Las Vegas.
+      </p>
+    </div>
+
+    <div class="category-grid">
+
+      <article class="category" id="free">
+        <div class="cat-icon">★</div>
+        <h3>Free Attractions</h3>
+        <p>Discover famous Las Vegas experiences that can be enjoyed without buying an admission ticket.</p>
+        <a href="https://www.visitlasvegas.com/experience/post/free-things-to-do-in-las-vegas/" target="_blank" rel="noopener">Explore Free Vegas →</a>
+      </article>
+
+      <article class="category" id="shows">
+        <div class="cat-icon">🎭</div>
+        <h3>Shows & Entertainment</h3>
+        <p>Headliners, comedy, magic, concerts, resident productions and spectacular Vegas entertainment.</p>
+        <a href="https://www.visitlasvegas.com/experience/entertainment/" target="_blank" rel="noopener">Find Entertainment →</a>
+      </article>
+
+      <article class="category" id="hotels">
+        <div class="cat-icon">🏨</div>
+        <h3>Hotels & Resorts</h3>
+        <p>Explore Strip resorts, Downtown hotels and places to stay throughout the Las Vegas Valley.</p>
+        <a href="https://www.visitlasvegas.com/hotels/" target="_blank" rel="noopener">Explore Hotels →</a>
+      </article>
+
+      <article class="category" id="dining">
+        <div class="cat-icon">🍽️</div>
+        <h3>Restaurants & Dining</h3>
+        <p>Celebrity chefs, buffets, steakhouses, casual dining, late-night food and Vegas favorites.</p>
+        <a href="https://www.opentable.com/las-vegas-restaurants" target="_blank" rel="noopener">Find Restaurants →</a>
+      </article>
+
+      <article class="category" id="nightlife">
+        <div class="cat-icon">🌙</div>
+        <h3>Nightlife</h3>
+        <p>Explore nightclubs, lounges, rooftop bars and the after-dark side of Las Vegas.</p>
+        <a href="https://www.visitlasvegas.com/experience/nightlife/" target="_blank" rel="noopener">Explore Nightlife →</a>
+      </article>
+
+      <article class="category">
+        <div class="cat-icon">☀️</div>
+        <h3>Pool Parties</h3>
+        <p>Dayclubs, resort pools and the high-energy daytime entertainment Vegas is famous for.</p>
+        <a href="https://www.visitlasvegas.com/experience/nightlife/pool-parties/" target="_blank" rel="noopener">Explore Pool Parties →</a>
+      </article>
+
+      <article class="category" id="tours">
+        <div class="cat-icon">🚁</div>
+        <h3>Helicopter Tours</h3>
+        <p>Experience Las Vegas and the surrounding desert from an entirely different perspective.</p>
+        <a href="https://www.papillon.com/" target="_blank" rel="noopener">Explore Tours →</a>
+      </article>
+
+      <article class="category">
+        <div class="cat-icon">🏜️</div>
+        <h3>Grand Canyon</h3>
+        <p>Plan a day trip or aerial adventure to one of America's most spectacular natural landmarks.</p>
+        <a href="https://www.nps.gov/grca/index.htm" target="_blank" rel="noopener">Grand Canyon Info →</a>
+      </article>
+
+      <article class="category">
+        <div class="cat-icon">🌊</div>
+        <h3>Hoover Dam</h3>
+        <p>Explore the engineering landmark on the Colorado River southeast of Las Vegas.</p>
+        <a href="https://www.usbr.gov/lc/hooverdam/" target="_blank" rel="noopener">Hoover Dam Info →</a>
+      </article>
+
+      <article class="category">
+        <div class="cat-icon">🥾</div>
+        <h3>Red Rock Canyon</h3>
+        <p>Leave the neon behind for desert scenery, hiking and the famous Red Rock scenic landscape.</p>
+        <a href="https://www.blm.gov/programs/national-conservation-lands/nevada/red-rock-canyon" target="_blank" rel="noopener">Explore Red Rock →</a>
+      </article>
+
+      <article class="category">
+        <div class="cat-icon">🏈</div>
+        <h3>Sports</h3>
+        <p>Raiders football, Golden Knights hockey, Aces basketball and major sporting events.</p>
+        <a href="https://www.visitlasvegas.com/experience/sports/" target="_blank" rel="noopener">Vegas Sports →</a>
+      </article>
+
+      <article class="category">
+        <div class="cat-icon">🛍️</div>
+        <h3>Shopping</h3>
+        <p>Luxury boutiques, malls, outlets, souvenir shops and unique Las Vegas retail experiences.</p>
+        <a href="https://www.visitlasvegas.com/experience/shopping/" target="_blank" rel="noopener">Go Shopping →</a>
+      </article>
+
+      <article class="category">
+        <div class="cat-icon">👨‍👩‍👧‍👦</div>
+        <h3>Family Attractions</h3>
+        <p>Find attractions and activities for families traveling to Las Vegas with children.</p>
+        <a href="https://www.visitlasvegas.com/experience/post/things-to-do-in-las-vegas-with-kids/" target="_blank" rel="noopener">Family Vegas →</a>
+      </article>
+
+      <article class="category">
+        <div class="cat-icon">⛳</div>
+        <h3>Golf</h3>
+        <p>Discover Las Vegas-area golf courses and desert golf experiences.</p>
+        <a href="https://www.visitlasvegas.com/experience/golf/" target="_blank" rel="noopener">Vegas Golf →</a>
+      </article>
+
+      <article class="category">
+        <div class="cat-icon">💍</div>
+        <h3>Las Vegas Weddings</h3>
+        <p>Wedding chapels, destination wedding information and Clark County marriage resources.</p>
+        <a href="https://weddings.vegas/" target="_blank" rel="noopener">Wedding Information →</a>
+      </article>
+
+      <article class="category">
+        <div class="cat-icon">🎰</div>
+        <h3>Downtown Las Vegas</h3>
+        <p>Explore Fremont Street, historic casinos, entertainment and the heart of old Vegas.</p>
+        <a href="https://vegasexperience.com/" target="_blank" rel="noopener">Explore Downtown →</a>
+      </article>
+
+    </div>
+
+  </div>
+</section>
+
+<section class="photo-feature welcome-photo">
+
+  <div class="photo-inner">
+
+    <div class="vegas-badge">Welcome to Las Vegas</div>
+
+    <h2>
+      Welcome to Fabulous Las Vegas
+    </h2>
+
+    <p>
+      One of the most recognizable signs in the world and a classic first stop for visitors. Make it part of your Vegas experience and capture the photo everyone recognizes.
+    </p>
+
+    <a class="btn btn-gold" href="https://www.google.com/maps/search/?api=1&query=Welcome+to+Fabulous+Las+Vegas+Sign" target="_blank" rel="noopener">
+      Get Directions
+    </a>
+
+  </div>
+
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <div class="section-title">
+      <div class="kicker">Vegas Highlights</div>
+      <h2>Don't miss these experiences</h2>
+    </div>
+
+    <div class="feature-grid">
+
+      <article class="feature">
+        <div class="feature-body">
+          <div class="feature-icon">⛲</div>
+          <h3>Bellagio Fountains</h3>
+          <p>One of the signature sights of the Las Vegas Strip and an iconic Vegas photo stop.</p>
+          <a href="https://bellagio.mgmresorts.com/en/entertainment/fountains-of-bellagio.html" target="_blank" rel="noopener">Official Information →</a>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div class="feature-body">
+          <div class="feature-icon">🎡</div>
+          <h3>High Roller</h3>
+          <p>See Las Vegas from high above the Strip aboard the observation wheel at The LINQ Promenade.</p>
+          <a href="https://www.caesars.com/linq/things-to-do/attractions/high-roller" target="_blank" rel="noopener">Official Information →</a>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div class="feature-body">
+          <div class="feature-icon">💡</div>
+          <h3>Fremont Street</h3>
+          <p>Downtown Vegas combines classic casino history, entertainment and the illuminated pedestrian experience.</p>
+          <a href="https://vegasexperience.com/" target="_blank" rel="noopener">Official Information →</a>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div class="feature-body">
+          <div class="feature-icon">🏟️</div>
+          <h3>Allegiant Stadium</h3>
+          <p>Home of the Las Vegas Raiders and a major destination for concerts and special events.</p>
+          <a href="https://www.allegiantstadium.com/" target="_blank" rel="noopener">Official Website →</a>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div class="feature-body">
+          <div class="feature-icon">🏒</div>
+          <h3>T-Mobile Arena</h3>
+          <p>Home ice for the Vegas Golden Knights and host to major concerts and sporting events.</p>
+          <a href="https://www.t-mobilearena.com/" target="_blank" rel="noopener">Official Website →</a>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div class="feature-body">
+          <div class="feature-icon">🌵</div>
+          <h3>Desert Adventures</h3>
+          <p>Use Las Vegas as your starting point for Nevada desert scenery, parks and outdoor adventures.</p>
+          <a href="https://travelnevada.com/" target="_blank" rel="noopener">Explore Nevada →</a>
+        </div>
+      </article>
+
+    </div>
+
+  </div>
+</section>
+
+<section class="photo-feature fremont-photo">
+
+  <div class="photo-inner">
+
+    <div class="vegas-badge">Downtown Las Vegas</div>
+
+    <h2>
+      Experience Fremont Street
+    </h2>
+
+    <p>
+      Neon, entertainment, classic Vegas history and the energy of Downtown Las Vegas make Fremont Street a completely different experience from the Strip.
+    </p>
+
+    <a class="btn btn-pink" href="https://vegasexperience.com/" target="_blank" rel="noopener">
+      Explore Fremont Street
+    </a>
+
+  </div>
+
+</section>
+
+<section class="section map-section" id="map-section">
+
+  <div class="container">
+
+    <div class="section-title">
+      <div class="kicker" style="color:#ffd15c;">Interactive Vegas Map</div>
+      <h2>See Las Vegas before you go</h2>
+      <p>
+        Select a destination or use your location to see where you are in relation to major Las Vegas attractions.
+      </p>
+    </div>
+
+    <div class="map-layout">
+
+      <div class="map-panel">
+        <div id="map"></div>
+      </div>
+
+      <aside class="map-panel map-side">
+
+        <button class="near-btn" id="nearMeBtn">
+          📍 Show My Location
+        </button>
+
+        <h3>Popular Locations</h3>
+
+        <p>
+          Choose a location to move the map directly to it.
+        </p>
+
+        <div class="location-list" id="locationList"></div>
+
+        <div class="map-status" id="mapStatus">
+          Select a Vegas destination or choose Show My Location.
+        </div>
+
+      </aside>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="section planner" id="planner">
+
+  <div class="container">
+
+    <div class="section-title">
+      <div class="kicker" style="color:#ffd15c;">Simple Trip Planner</div>
+      <h2>Build your Vegas checklist</h2>
+      <p style="color:#eadff0;">
+        Choose what interests you and TourLV.com will create a simple Vegas checklist for your visit.
+      </p>
+    </div>
+
+    <div class="planner-box">
+
+      <div class="planner-options">
+
+        <div class="plan-choice">
+          <input type="checkbox" id="planFree" value="See a free Las Vegas attraction such as the Bellagio Fountains or Fremont Street.">
+          <label for="planFree">Free Attractions</label>
+        </div>
+
+        <div class="plan-choice">
+          <input type="checkbox" id="planShows" value="Choose a Las Vegas show or live entertainment experience.">
+          <label for="planShows">Shows</label>
+        </div>
+
+        <div class="plan-choice">
+          <input type="checkbox" id="planFood" value="Reserve a memorable Las Vegas restaurant or dining experience.">
+          <label for="planFood">Dining</label>
+        </div>
+
+        <div class="plan-choice">
+          <input type="checkbox" id="planNight" value="Explore a Las Vegas nightclub, lounge or evening destination.">
+          <label for="planNight">Nightlife</label>
+        </div>
+
+        <div class="plan-choice">
+          <input type="checkbox" id="planCanyon" value="Plan a Grand Canyon excursion or scenic tour.">
+          <label for="planCanyon">Grand Canyon</label>
+        </div>
+
+        <div class="plan-choice">
+          <input type="checkbox" id="planRedRock" value="Visit Red Rock Canyon for desert scenery and outdoor recreation.">
+          <label for="planRedRock">Red Rock</label>
+        </div>
+
+        <div class="plan-choice">
+          <input type="checkbox" id="planSports" value="Check the Las Vegas sports and event schedule.">
+          <label for="planSports">Sports</label>
+        </div>
+
+        <div class="plan-choice">
+          <input type="checkbox" id="planDowntown" value="Spend time exploring Downtown Las Vegas and Fremont Street.">
+          <label for="planDowntown">Downtown</label>
+        </div>
+
+      </div>
+
+      <button class="btn btn-gold" id="buildPlanBtn">
+        Build My Vegas Checklist
+      </button>
+
+      <button class="btn btn-white" id="clearPlanBtn" style="margin-left:8px;">
+        Clear
+      </button>
+
+      <div class="plan-output" id="planOutput">
+        <h3>Your TourLV.com Vegas Checklist</h3>
+        <ul id="planList"></ul>
+        <p>
+          Tip: Check official attraction, venue and transportation websites before leaving for current schedules, availability and prices.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="section" id="essentials">
+  <div class="container">
+
+    <div class="section-title">
+      <div class="kicker">Visitor Essentials</div>
+      <h2>Useful Las Vegas information</h2>
+      <p>
+        Transportation, airport, emergency and visitor resources in one place.
+      </p>
+    </div>
+
+    <div class="essential-grid">
+
+      <article class="essential">
+        <h3>✈️ Harry Reid International Airport</h3>
+        <p>Flight, parking, terminal, ground transportation and airport information.</p>
+        <div class="essential-links">
+          <a class="small-link" href="https://www.harryreidairport.com/" target="_blank" rel="noopener">Airport Website</a>
+          <a class="small-link" href="https://www.harryreidairport.com/Transportation/" target="_blank" rel="noopener">Transportation</a>
+        </div>
+      </article>
+
+      <article class="essential">
+        <h3>🚌 Getting Around</h3>
+        <p>Find public transit and Las Vegas Monorail information for moving around the resort corridor.</p>
+        <div class="essential-links">
+          <a class="small-link" href="https://www.rtcsnv.com/" target="_blank" rel="noopener">RTC Transit</a>
+          <a class="small-link" href="https://www.lvmonorail.com/" target="_blank" rel="noopener">Monorail</a>
+        </div>
+      </article>
+
+      <article class="essential">
+        <h3>🚗 Roads & Traffic</h3>
+        <p>Check Nevada road conditions before driving around Las Vegas or taking a road trip.</p>
+        <div class="essential-links">
+          <a class="small-link" href="https://www.nvroads.com/" target="_blank" rel="noopener">Nevada 511</a>
+        </div>
+      </article>
+
+      <article class="essential">
+        <h3>🌡️ Desert Weather</h3>
+        <p>Las Vegas weather can vary significantly by season. Check conditions before outdoor activities.</p>
+        <div class="essential-links">
+          <a class="small-link" href="https://forecast.weather.gov/MapClick.php?lat=36.17&lon=-115.14" target="_blank" rel="noopener">Weather</a>
+        </div>
+      </article>
+
+      <article class="essential">
+        <h3>🏥 Emergency Information</h3>
+        <p>For life-threatening emergencies in the United States, call 911. Use official local resources for non-emergency needs.</p>
+        <div class="essential-links">
+          <a class="small-link" href="https://www.lasvegasnevada.gov/" target="_blank" rel="noopener">City of Las Vegas</a>
+        </div>
+      </article>
+
+      <article class="essential">
+        <h3>ℹ️ Visitor Information</h3>
+        <p>Check official tourism information for current attractions, events and Las Vegas travel ideas.</p>
+        <div class="essential-links">
+          <a class="small-link" href="https://www.visitlasvegas.com/" target="_blank" rel="noopener">Visit Las Vegas</a>
+          <a class="small-link" href="https://travelnevada.com/" target="_blank" rel="noopener">Travel Nevada</a>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="notice" style="margin-top:24px;">
+      <strong>Important:</strong>
+      TourLV.com is an independent informational website. TourLV.com is free to use; individual hotels, attractions, tours, shows, transportation services, restaurants and activities may charge fees. Prices, schedules, operating hours, availability and policies can change. Always verify important information directly with the venue or service provider before purchasing or traveling.
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer>
+
+  <div class="footer-inner">
+
+    <div class="footer-logo">
+      Tour<span>LV</span>.com
+    </div>
+
+    <p>
+      <strong>Tour Fast. Tour Free.</strong>
+    </p>
+
+    <p>
+      TourLV.com is an independent Las Vegas information and travel-resource website and is not affiliated with the City of Las Vegas, Clark County, the Las Vegas Convention and Visitors Authority, any hotel, casino, attraction, sports team, venue or tour operator unless specifically stated.
+    </p>
+
+    <p>
+      External websites are provided for convenience. TourLV.com does not control third-party pricing, availability, schedules, policies or content. Maps and geographic information may be incomplete or change over time.
+    </p>
+
+    <p class="photo-credit">
+      Las Vegas photography displayed through Wikimedia Commons. Individual images remain subject to their respective Wikimedia Commons licenses and attribution requirements.
+    </p>
+
+    <p>
+      © 2026 TourLV.com • All Rights Reserved
+    </p>
+
+  </div>
+
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+"use strict";
+
+/* LAS VEGAS CLOCK */
+
+function updateVegasTime(){
+  try{
+    const now = new Date();
+
+    const formatted = new Intl.DateTimeFormat(
+      "en-US",
+      {
+        timeZone:"America/Los_Angeles",
+        hour:"numeric",
+        minute:"2-digit",
+        second:"2-digit",
+        hour12:true
+      }
+    ).format(now);
+
+    document.getElementById("vegasTime").textContent = formatted;
+  }
+  catch(error){
+    document.getElementById("vegasTime").textContent = "Pacific Time";
+  }
+}
+
+updateVegasTime();
+setInterval(updateVegasTime,1000);
+
+
+/* VEGAS MAP */
+
+let map = null;
+let userMarker = null;
+
+const vegasLocations = [
+  {
+    name:"Welcome to Fabulous Las Vegas Sign",
+    lat:36.0820,
+    lng:-115.1728,
+    icon:"★"
+  },
+  {
+    name:"Bellagio Fountains",
+    lat:36.1126,
+    lng:-115.1767,
+    icon:"⛲"
+  },
+  {
+    name:"Fremont Street Experience",
+    lat:36.1708,
+    lng:-115.1440,
+    icon:"💡"
+  },
+  {
+    name:"High Roller",
+    lat:36.1176,
+    lng:-115.1687,
+    icon:"🎡"
+  },
+  {
+    name:"Allegiant Stadium",
+    lat:36.0908,
+    lng:-115.1833,
+    icon:"🏟️"
+  },
+  {
+    name:"T-Mobile Arena",
+    lat:36.1029,
+    lng:-115.1784,
+    icon:"🏒"
+  },
+  {
+    name:"Harry Reid International Airport",
+    lat:36.0840,
+    lng:-115.1537,
+    icon:"✈️"
+  },
+  {
+    name:"Red Rock Canyon Visitor Center",
+    lat:36.1355,
+    lng:-115.4270,
+    icon:"🥾"
+  },
+  {
+    name:"Hoover Dam",
+    lat:36.0156,
+    lng:-114.7378,
+    icon:"🌊"
+  }
+];
+
+function directionsURL(place){
+  return "https://www.google.com/maps/dir/?api=1&destination=" +
+    encodeURIComponent(place.lat + "," + place.lng);
+}
+
+function initializeMap(){
+
+  const mapElement = document.getElementById("map");
+
+  if(typeof L === "undefined"){
+    mapElement.innerHTML =
+      '<div style="padding:40px;text-align:center;color:#333;">The interactive map could not load. Please refresh the page.</div>';
+    return;
+  }
+
+  map = L.map("map").setView([36.116,-115.172],12);
+
+  L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      maxZoom:19,
+      attribution:'&copy; OpenStreetMap contributors'
+    }
+  ).addTo(map);
+
+  vegasLocations.forEach(function(place){
+
+    const marker = L.marker([place.lat,place.lng]).addTo(map);
+
+    marker.bindPopup(
+      "<strong>" + place.icon + " " + place.name + "</strong><br>" +
+      '<a href="' + directionsURL(place) + '" target="_blank" rel="noopener">Get Directions</a>'
+    );
+
+    place.marker = marker;
+  });
+
+  setTimeout(function(){
+    map.invalidateSize();
+  },250);
+}
+
+function buildLocationButtons(){
+
+  const list = document.getElementById("locationList");
+
+  vegasLocations.forEach(function(place){
+
+    const button = document.createElement("button");
+
+    button.className = "location-button";
+    button.type = "button";
+    button.textContent = place.icon + " " + place.name;
+
+    button.addEventListener("click",function(){
+
+      if(!map){
+        return;
+      }
+
+      map.setView([place.lat,place.lng],15);
+
+      if(place.marker){
+        place.marker.openPopup();
+      }
+    });
+
+    list.appendChild(button);
+  });
+}
+
+function showMyLocation(){
+
+  const status = document.getElementById("mapStatus");
+
+  if(!navigator.geolocation){
+    status.textContent =
+      "Your browser does not support location services.";
+    return;
+  }
+
+  status.textContent =
+    "Requesting your location...";
+
+  navigator.geolocation.getCurrentPosition(
+    function(position){
+
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      if(userMarker){
+        map.removeLayer(userMarker);
+      }
+
+      userMarker = L.marker([lat,lng])
+        .addTo(map)
+        .bindPopup("<strong>Your Location</strong>")
+        .openPopup();
+
+      map.setView([lat,lng],14);
+
+      status.textContent =
+        "Your location is displayed on the map. TourLV.com does not save it.";
+    },
+
+    function(){
+      status.textContent =
+        "Location permission was not available. You can still choose any Vegas destination above.";
+    },
+
+    {
+      enableHighAccuracy:false,
+      timeout:15000,
+      maximumAge:300000
+    }
+  );
+}
+
+
+/* TRIP PLANNER */
+
+function buildPlan(){
+
+  const checked =
+    document.querySelectorAll(
+      ".planner-options input[type='checkbox']:checked"
+    );
+
+  const output =
+    document.getElementById("planOutput");
+
+  const list =
+    document.getElementById("planList");
+
+  list.innerHTML = "";
+
+  if(!checked.length){
+
+    const item =
+      document.createElement("li");
+
+    item.textContent =
+      "Choose at least one Vegas experience above.";
+
+    list.appendChild(item);
+
+    output.style.display = "block";
+    return;
+  }
+
+  checked.forEach(function(box){
+
+    const item =
+      document.createElement("li");
+
+    item.textContent =
+      box.value;
+
+    list.appendChild(item);
+  });
+
+  const mapItem =
+    document.createElement("li");
+
+  mapItem.textContent =
+    "Use the TourLV.com map to organize your stops and directions.";
+
+  list.appendChild(mapItem);
+
+  output.style.display = "block";
+
+  output.scrollIntoView({
+    behavior:"smooth",
+    block:"nearest"
+  });
+}
+
+function clearPlan(){
+
+  document
+    .querySelectorAll(
+      ".planner-options input[type='checkbox']"
+    )
+    .forEach(function(box){
+      box.checked = false;
+    });
+
+  document.getElementById("planList").innerHTML = "";
+
+  document.getElementById("planOutput").style.display = "none";
+}
+
+
+/* START */
+
+document.addEventListener("DOMContentLoaded",function(){
+
+  initializeMap();
+
+  buildLocationButtons();
+
+  document
+    .getElementById("nearMeBtn")
+    .addEventListener(
+      "click",
+      showMyLocation
+    );
+
+  document
+    .getElementById("buildPlanBtn")
+    .addEventListener(
+      "click",
+      buildPlan
+    );
+
+  document
+    .getElementById("clearPlanBtn")
+    .addEventListener(
+      "click",
+      clearPlan
+    );
+
+});
+
+window.addEventListener("resize",function(){
+
+  if(map){
+    setTimeout(function(){
+      map.invalidateSize();
+    },100);
+  }
+
+});
+</script>
 
 </body>
 </html>
